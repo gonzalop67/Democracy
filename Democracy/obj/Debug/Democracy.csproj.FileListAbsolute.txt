@@ -83,4 +83,3 @@ C:\Users\gonzalop\Source\Repos\Democracy\Democracy\obj\Debug\Democracy.pdb
 C:\Users\gonzalop\Source\Repos\Democracy\Democracy\obj\Debug\Democracy.Migrations.InitialCreate.resources
 C:\Users\gonzalop\Source\Repos\Democracy\Democracy\obj\Debug\Democracy.csproj.GenerateResource.Cache
 C:\Users\gonzalop\Source\Repos\Democracy\Democracy\obj\Debug\Democracy.Migrations._20171004.resources
-C:\Users\gonzalop\Source\Repos\Democracy\Democracy\obj\Debug\Democracy.csprojResolveAssemblyReference.cache

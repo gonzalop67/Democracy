@@ -265,8 +265,8 @@
     <Content Include="Views\Votings\Delete.cshtml" />
     <Content Include="Views\Votings\Details.cshtml" />
     <Content Include="Views\Votings\Edit.cshtml" />
-    <Content Include="Views\Votings\Index.cshtml" />
     <Content Include="Views\Votings\Create.cshtml" />
+    <Content Include="Views\Votings\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
