@@ -35,6 +35,9 @@ namespace Democracy.Models
             MinimumLength = 2)]
         public string LastName { get; set; }
 
+        [Display(Name = "User")]
+        public string FullName { get { return string.Format("{0} {1}", this.FirstName, this.LastName); } }
+
         [Required(ErrorMessage = "The field {0} is required")]
         [StringLength(20, ErrorMessage =
             "The field {0} can contain maximum {1} and minimum {2} characters",
@@ -56,6 +59,8 @@ namespace Democracy.Models
             MinimumLength = 5)]
         [DataType(DataType.ImageUrl)]
         public string Photo { get; set; }
+
+        public virtual ICollection<GroupMember> GroupMembers { get; set; }
 
     }
 }
