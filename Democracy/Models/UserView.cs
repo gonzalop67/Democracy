@@ -1,15 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
 
 namespace Democracy.Models
 {
-    public class User
+    public class UserView
     {
-        [Key]
+
         public int UserId { get; set; }
 
         [Display(Name = "E-Mail")]
@@ -18,7 +17,6 @@ namespace Democracy.Models
             "The field {0} can contain maximum {1} and minimum {2} characters",
             MinimumLength = 7)]
         [DataType(DataType.EmailAddress)]
-        [Index("UserNameIndex", IsUnique = true)]
         public string UserName { get; set; }
 
         [Display(Name = "First name")]
@@ -51,11 +49,7 @@ namespace Democracy.Models
 
         public string Group { get; set; }
 
-        [StringLength(200, ErrorMessage =
-            "The field {0} can contain maximum {1} and minimum {2} characters",
-            MinimumLength = 5)]
-        [DataType(DataType.ImageUrl)]
-        public string Photo { get; set; }
+        public HttpPostedFileBase Photo { get; set; }
 
     }
 }

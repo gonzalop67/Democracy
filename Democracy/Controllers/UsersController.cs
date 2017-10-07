@@ -7,9 +7,11 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using Democracy.Models;
+using System.IO;
 
 namespace Democracy.Controllers
 {
+    [Authorize]
     public class UsersController : Controller
     {
         private DemocracyContext db = new DemocracyContext();
@@ -42,20 +44,68 @@ namespace Democracy.Controllers
         }
 
         // POST: Users/Create
-        // Para protegerse de ataques de publicación excesiva, habilite las propiedades específicas a las que desea enlazarse. Para obtener 
-        // más información vea http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "UserId,UserName,FirstName,LastName,Phone,Address,Grade,Photo")] User user)
+        public ActionResult Create(UserView userView)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                db.Users.Add(user);
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                return View(userView);
             }
 
-            return View(user);
+            // Upload image
+            string path = string.Empty;
+            string pic = string.Empty;
+
+            if (userView.Photo != null)
+            {
+                pic = Path.GetFileName(userView.Photo.FileName);
+                path = Path.Combine(Server.MapPath("~/Content/Photos"), pic);
+                userView.Photo.SaveAs(path);
+                using (MemoryStream ms = new MemoryStream())
+                {
+                    userView.Photo.InputStream.CopyTo(ms);
+                    byte[] array = ms.GetBuffer();
+                }
+            }
+
+            // Save record
+            var user = new User
+            {
+                Address = userView.Address,
+                FirstName = userView.FirstName,
+                Grade = userView.Grade,
+                Group = userView.Group,
+                LastName = userView.LastName,
+                Phone = userView.Phone,
+                Photo = (pic == string.Empty) ? string.Empty : string.Format("~/Content/Photos/{0}", pic),
+                UserName = userView.UserName
+            };
+
+            db.Users.Add(user);
+
+            try
+            {
+                db.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                if (ex.InnerException != null && 
+                    ex.InnerException.InnerException != null && 
+                    ex.InnerException.InnerException.Message.Contains("UserNameIndex"))
+                {
+                    ViewBag.Error = "The email has already used for another user";
+                }
+                else
+                {
+                    ViewBag.Error = ex.Message;
+                }
+
+                return RedirectToAction("Index");
+            }
+            
+            return RedirectToAction("Index");
+
         }
 
         // GET: Users/Edit/5
@@ -65,28 +115,72 @@ namespace Democracy.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            User user = db.Users.Find(id);
+
+            var user = db.Users.Find(id);
+
             if (user == null)
             {
                 return HttpNotFound();
             }
-            return View(user);
+
+            var userView = new UserView
+            {
+                Address = user.Address,
+                FirstName = user.FirstName,
+                Grade = user.Grade,
+                Group = user.Group,
+                LastName = user.LastName,
+                Phone = user.Phone,
+                UserId = user.UserId,
+                UserName = user.UserName
+            };
+
+            return View(userView);
         }
 
         // POST: Users/Edit/5
-        // Para protegerse de ataques de publicación excesiva, habilite las propiedades específicas a las que desea enlazarse. Para obtener 
-        // más información vea http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "UserId,UserName,FirstName,LastName,Phone,Address,Grade,Photo")] User user)
+        public ActionResult Edit(UserView userView)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                db.Entry(user).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                return View(userView);
             }
-            return View(user);
+
+            // Upload image
+            string path = string.Empty;
+            string pic = string.Empty;
+
+            if (userView.Photo != null)
+            {
+                pic = Path.GetFileName(userView.Photo.FileName);
+                path = Path.Combine(Server.MapPath("~/Content/Photos"), pic);
+                userView.Photo.SaveAs(path);
+                using (MemoryStream ms = new MemoryStream())
+                {
+                    userView.Photo.InputStream.CopyTo(ms);
+                    byte[] array = ms.GetBuffer();
+                }
+            }
+
+            var user = db.Users.Find(userView.UserId);
+
+            user.Address = userView.Address;
+            user.FirstName = userView.FirstName;
+            user.Grade = userView.Grade;
+            user.Group = userView.Group;
+            user.LastName = userView.LastName;
+            user.Phone = userView.Phone;
+
+            if (!string.IsNullOrEmpty(pic))
+            {
+                user.Photo = string.Format("~/Content/Photos/{0}", pic);
+            }
+
+            db.Entry(user).State = EntityState.Modified;
+            db.SaveChanges();
+            return RedirectToAction("Index");
         }
 
         // GET: Users/Delete/5

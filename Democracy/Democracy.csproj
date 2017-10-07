@@ -196,6 +196,7 @@
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\State.cs" />
     <Compile Include="Models\User.cs" />
+    <Compile Include="Models\UserView.cs" />
     <Compile Include="Models\Voting.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
@@ -279,6 +280,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Content\Photos\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
