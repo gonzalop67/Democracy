@@ -1,0 +1,42 @@
+﻿@model Democracy.Models.AddGroupView
+
+@{
+    ViewBag.Title = "AddGroup";
+}
+
+<h2>Add group to voting</h2>
+<h3>@ViewBag.Error</h3>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <h4>Voting</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.VotingId)
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.GroupId, "Group", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownList("GroupId", "Select a group...")
+                @Html.ValidationMessageFor(model => model.GroupId)
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Add group" class="btn btn-primary" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to voting", "Details", new {id = Model.VotingId }, new { @class = "btn btn-success" })
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

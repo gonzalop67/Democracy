@@ -6,36 +6,47 @@ using System.Web;
 
 namespace Democracy.Models
 {
-    public class Voting
+    public class VotingView
     {
-        [Key]
         public int VotingId { get; set; }
-        
+
         [Required(ErrorMessage = "The field {0} is required")]
         [StringLength(50, ErrorMessage =
             "The field {0} can contain maximum {1} and minimum {2} characters",
             MinimumLength = 3)]
         [Display(Name = "Voting description")]
         public string Description { get; set; }
-        
+
         [Required(ErrorMessage = "The field {0} is required")]
-        [Display(Name="State")]
+        [Display(Name = "State")]
         public int StateId { get; set; }
-        
+
         [DataType(DataType.MultilineText)]
         public string Remarks { get; set; }
-        
+
         [Required(ErrorMessage = "The field {0} is required")]
-        [Display(Name = "Date time start")]
-        [DataType(DataType.DateTime)]
-        [DisplayFormat(DataFormatString="{0:dd/MM/yyyy hh:mm}", ApplyFormatInEditMode=true)]
-        public DateTime DateTimeStart { get; set; }
-        
+        [Display(Name = "Date start")]
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
+        public DateTime DateStart { get; set; }
+
         [Required(ErrorMessage = "The field {0} is required")]
-        [Display(Name = "Date time end")]
-        [DataType(DataType.DateTime)]
-        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy hh:mm}", ApplyFormatInEditMode = true)]
-        public DateTime DateTimeEnd { get; set; }
+        [Display(Name = "Time start")]
+        [DataType(DataType.Time)]
+        [DisplayFormat(DataFormatString = "{0:hh:mm tt}", ApplyFormatInEditMode = true)]
+        public DateTime TimeStart { get; set; }
+
+        [Required(ErrorMessage = "The field {0} is required")]
+        [Display(Name = "Date end")]
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
+        public DateTime DateEnd { get; set; }
+
+        [Required(ErrorMessage = "The field {0} is required")]
+        [Display(Name = "Time end")]
+        [DataType(DataType.Time)]
+        [DisplayFormat(DataFormatString = "{0:hh:mm tt}", ApplyFormatInEditMode = true)]
+        public DateTime TimeEnd { get; set; }
 
         [Required(ErrorMessage = "The field {0} is required")]
         [Display(Name = "Is for all users?")]
@@ -45,16 +56,5 @@ namespace Democracy.Models
         [Display(Name = "Is enabled blank votes?")]
         public bool IsEnabledBlankVotes { get; set; }
 
-        [Display(Name = "Quantity votes")]
-        public int QuantityVotes { get; set; }
-
-        [Display(Name = "Winner")]
-        public int QuantityBlankVotes { get; set; }
-        
-        public int CandidateWinId { get; set; }
-
-        public virtual State State { get; set; }
-
-        public virtual ICollection<VotingGroup> VotingGroups { get; set; }
     }
 }

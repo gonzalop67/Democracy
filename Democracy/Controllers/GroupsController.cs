@@ -167,13 +167,35 @@ namespace Democracy.Controllers
         }
 
         // POST: Groups/Delete/5
-        [HttpPost, ActionName("Delete")]
+        [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
+        public ActionResult Delete(int id, Group group)
         {
-            Group group = db.Groups.Find(id);
+            group = db.Groups.Find(id);
+            if (group == null)
+            {
+                return HttpNotFound();
+            }
             db.Groups.Remove(group);
-            db.SaveChanges();
+            try
+            {
+                db.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                if (ex.InnerException != null &&
+                    ex.InnerException.InnerException != null &&
+                    ex.InnerException.InnerException.Message.Contains("REFERENCE"))
+                {
+                    ViewBag.Error = "Can't delete the record, because has related records";
+                }
+                else
+                {
+                    ViewBag.Error = ex.Message;
+                }
+
+                return View(group);
+            }
             return RedirectToAction("Index");
         }
 
