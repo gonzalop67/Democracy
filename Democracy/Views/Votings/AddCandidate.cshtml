@@ -1,11 +1,10 @@
-﻿@model Democracy.Models.AddMemberView
+﻿@model Democracy.Models.AddCandidateView
 
 @{
-    ViewBag.Title = "AddMember";
+    ViewBag.Title = "AddCandidate";
 }
 
-<h2>Add member to group</h2>
-<h3>@ViewBag.Error</h3>
+<h2>Add candidate to voting</h2>
 
 @using (Html.BeginForm())
 {
@@ -15,7 +14,7 @@
         <h4>Voting</h4>
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        @Html.HiddenFor(model => model.GroupId)
+        @Html.HiddenFor(model => model.VotingId)
 
         <div class="form-group">
             @Html.LabelFor(model => model.UserId, "User", htmlAttributes: new { @class = "control-label col-md-2" })
@@ -27,14 +26,14 @@
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Add member" class="btn btn-primary" />
+                <input type="submit" value="Add candidate" class="btn btn-primary" />
             </div>
         </div>
     </div>
 }
 
 <div>
-    @Html.ActionLink("Back to group", "Index", new { id = Model.GroupId }, new { @class = "btn btn-success" })
+    @Html.ActionLink("Back to voting", "Index", new { id = Model.VotingId }, new { @class = "btn btn-success" })
 </div>
 
 @section Scripts {

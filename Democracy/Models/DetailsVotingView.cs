@@ -6,31 +6,30 @@ using System.Web;
 
 namespace Democracy.Models
 {
-    public class Voting
+    public class DetailsVotingView
     {
-        [Key]
         public int VotingId { get; set; }
-        
+
         [Required(ErrorMessage = "The field {0} is required")]
         [StringLength(50, ErrorMessage =
             "The field {0} can contain maximum {1} and minimum {2} characters",
             MinimumLength = 3)]
         [Display(Name = "Voting description")]
         public string Description { get; set; }
-        
+
         [Required(ErrorMessage = "The field {0} is required")]
-        [Display(Name="State")]
+        [Display(Name = "State")]
         public int StateId { get; set; }
-        
+
         [DataType(DataType.MultilineText)]
         public string Remarks { get; set; }
-        
+
         [Required(ErrorMessage = "The field {0} is required")]
         [Display(Name = "Date time start")]
         [DataType(DataType.DateTime)]
-        [DisplayFormat(DataFormatString="{0:dd/MM/yyyy hh:mm}", ApplyFormatInEditMode=true)]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy hh:mm}", ApplyFormatInEditMode = true)]
         public DateTime DateTimeStart { get; set; }
-        
+
         [Required(ErrorMessage = "The field {0} is required")]
         [Display(Name = "Date time end")]
         [DataType(DataType.DateTime)]
@@ -50,13 +49,14 @@ namespace Democracy.Models
 
         [Display(Name = "Winner")]
         public int QuantityBlankVotes { get; set; }
-        
+
         public int CandidateWinId { get; set; }
 
         public virtual State State { get; set; }
 
-        public virtual ICollection<VotingGroup> VotingGroups { get; set; }
+        public List<VotingGroup> VotingGroups { get; set; }
 
-        public virtual ICollection<Candidate> Candidates { get; set; }
+        public List<Candidate> Candidates { get; set; }
+
     }
 }
