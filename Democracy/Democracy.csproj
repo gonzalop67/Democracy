@@ -170,6 +170,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Classes\Utilities.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\GroupsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -201,6 +202,7 @@
     <Compile Include="Models\GroupMember.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
+    <Compile Include="Models\RegisterUserView.cs" />
     <Compile Include="Models\State.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Models\UserView.cs" />
@@ -213,6 +215,16 @@
   <ItemGroup>
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\Photos\Angelina.jpg" />
+    <Content Include="Content\Photos\debora-testa.jpg" />
+    <Content Include="Content\Photos\elber-gomez-torba.jpg" />
+    <Content Include="Content\Photos\freddie-mercury.jpg" />
+    <Content Include="Content\Photos\gonzalofoto.jpg" />
+    <Content Include="Content\Photos\hector.jpg" />
+    <Content Include="Content\Photos\pedro-infante.jpg" />
+    <Content Include="Content\Photos\ugly-people-1.jpg" />
+    <Content Include="Content\Photos\ugly-people-2.jpg" />
+    <Content Include="Content\Photos\ugly-people-3.jpg" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
@@ -294,7 +306,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Content\Photos\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />

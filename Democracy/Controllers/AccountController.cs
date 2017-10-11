@@ -9,6 +9,9 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using Democracy.Models;
+using System.IO;
+using Democracy.Classes;
+using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace Democracy.Controllers
 {
@@ -147,29 +150,89 @@ namespace Democracy.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Register(RegisterViewModel model)
+        public async Task<ActionResult> Register(RegisterUserView userView)
         {
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
-                var result = await UserManager.CreateAsync(user, model.Password);
-                if (result.Succeeded)
-                {
-                    await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
-                    
-                    // Para obtener más información sobre cómo habilitar la confirmación de cuenta y el restablecimiento de contraseña, visite http://go.microsoft.com/fwlink/?LinkID=320771
-                    // Enviar correo electrónico con este vínculo
-                    // string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
-                    // var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
-                    // await UserManager.SendEmailAsync(user.Id, "Confirmar cuenta", "Para confirmar la cuenta, haga clic <a href=\"" + callbackUrl + "\">aquí</a>");
 
+                // Upload image
+                Utilities.UploadPhoto(userView.Photo);
+                var pic = Path.GetFileName(userView.Photo.FileName);
+
+                // Save record
+                var user = new User
+                {
+                    Address = userView.Address,
+                    FirstName = userView.FirstName,
+                    Grade = userView.Grade,
+                    Group = userView.Group,
+                    LastName = userView.LastName,
+                    Phone = userView.Phone,
+                    Photo = (pic == string.Empty) ? string.Empty : string.Format("~/Content/Photos/{0}", pic),
+                    UserName = userView.UserName
+                };
+
+                var db = new DemocracyContext();
+                db.Users.Add(user);
+
+                try
+                {
+                    db.SaveChanges();
+                    var userASP = this.CreateASPUser(userView);
+                    await SignInManager.SignInAsync(userASP, isPersistent: false, rememberBrowser: false);
                     return RedirectToAction("Index", "Home");
                 }
-                AddErrors(result);
+                catch (Exception ex)
+                {
+                    if (ex.InnerException != null &&
+                        ex.InnerException.InnerException != null &&
+                        ex.InnerException.InnerException.Message.Contains("UserNameIndex"))
+                    {
+                        ModelState.AddModelError(string.Empty, "The email has already used for another user");
+                    }
+                    else
+                    {
+                        ModelState.AddModelError(string.Empty, ex.Message);
+                    }
+
+                    return RedirectToAction("Index");
+                }
             }
 
             // Si llegamos a este punto, es que se ha producido un error y volvemos a mostrar el formulario
-            return View(model);
+            return View(userView);
+        }
+
+        private ApplicationUser CreateASPUser(RegisterUserView userView)
+        {
+            // User management
+            var userContext = new ApplicationDbContext();
+            var userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(userContext));
+            var roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(userContext));
+
+            // Create User role
+            string roleName = "User";
+
+            // Check to see if Role Exists, if not create it
+            if (!roleManager.RoleExists(roleName))
+            {
+                roleManager.Create(new IdentityRole(roleName));
+            }
+
+            // Create the ASP NET User
+            var userASP = new ApplicationUser
+            {
+                UserName = userView.UserName,
+                Email = userView.UserName,
+                PhoneNumber = userView.Phone
+            };
+
+            userManager.Create(userASP, userView.Password);
+
+            // Add user to role
+            userASP = userManager.FindByName(userView.UserName);
+            userManager.AddToRole(userASP.Id, "User");
+            return userASP;
         }
 
         //

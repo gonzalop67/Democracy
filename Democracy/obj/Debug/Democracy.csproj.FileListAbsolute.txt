@@ -30,6 +30,8 @@ C:\Users\gonzalop\Source\Repos\Democracy\Democracy\bin\System.Web.WebPages.Deplo
 C:\Users\gonzalop\Source\Repos\Democracy\Democracy\bin\System.Web.WebPages.dll
 C:\Users\gonzalop\Source\Repos\Democracy\Democracy\bin\System.Web.WebPages.Razor.dll
 C:\Users\gonzalop\Source\Repos\Democracy\Democracy\bin\WebGrease.dll
+C:\Users\gonzalop\Source\Repos\Democracy\Democracy\bin\EntityFramework.xml
+C:\Users\gonzalop\Source\Repos\Democracy\Democracy\bin\EntityFramework.SqlServer.xml
 C:\Users\gonzalop\Source\Repos\Democracy\Democracy\bin\System.Web.Helpers.xml
 C:\Users\gonzalop\Source\Repos\Democracy\Democracy\bin\System.Web.Mvc.xml
 C:\Users\gonzalop\Source\Repos\Democracy\Democracy\bin\System.Web.Optimization.xml
@@ -42,8 +44,6 @@ C:\Users\gonzalop\Source\Repos\Democracy\Democracy\bin\Newtonsoft.Json.xml
 C:\Users\gonzalop\Source\Repos\Democracy\Democracy\bin\System.Net.Http.Formatting.xml
 C:\Users\gonzalop\Source\Repos\Democracy\Democracy\bin\System.Web.Http.xml
 C:\Users\gonzalop\Source\Repos\Democracy\Democracy\bin\System.Web.Http.WebHost.xml
-C:\Users\gonzalop\Source\Repos\Democracy\Democracy\bin\EntityFramework.xml
-C:\Users\gonzalop\Source\Repos\Democracy\Democracy\bin\EntityFramework.SqlServer.xml
 C:\Users\gonzalop\Source\Repos\Democracy\Democracy\bin\Microsoft.AspNet.Identity.Core.xml
 C:\Users\gonzalop\Source\Repos\Democracy\Democracy\bin\Microsoft.AspNet.Identity.Owin.xml
 C:\Users\gonzalop\Source\Repos\Democracy\Democracy\bin\Microsoft.AspNet.Identity.EntityFramework.xml
@@ -56,6 +56,8 @@ C:\Users\gonzalop\Source\Repos\Democracy\Democracy\bin\Microsoft.Owin.Security.O
 C:\Users\gonzalop\Source\Repos\Democracy\Democracy\bin\Microsoft.Owin.Security.Google.xml
 C:\Users\gonzalop\Source\Repos\Democracy\Democracy\bin\Microsoft.Owin.Security.Twitter.xml
 C:\Users\gonzalop\Source\Repos\Democracy\Democracy\bin\Microsoft.Owin.Security.MicrosoftAccount.xml
+C:\Users\gonzalop\Source\Repos\Democracy\Democracy\bin\es\EntityFramework.resources.dll
+C:\Users\gonzalop\Source\Repos\Democracy\Democracy\bin\es\EntityFramework.SqlServer.resources.dll
 C:\Users\gonzalop\Source\Repos\Democracy\Democracy\bin\es\System.Web.Helpers.resources.dll
 C:\Users\gonzalop\Source\Repos\Democracy\Democracy\bin\es\System.Web.Mvc.resources.dll
 C:\Users\gonzalop\Source\Repos\Democracy\Democracy\bin\es\System.Web.Optimization.resources.dll
@@ -66,8 +68,6 @@ C:\Users\gonzalop\Source\Repos\Democracy\Democracy\bin\es\System.Web.WebPages.Ra
 C:\Users\gonzalop\Source\Repos\Democracy\Democracy\bin\es\System.Net.Http.Formatting.resources.dll
 C:\Users\gonzalop\Source\Repos\Democracy\Democracy\bin\es\System.Web.Http.resources.dll
 C:\Users\gonzalop\Source\Repos\Democracy\Democracy\bin\es\System.Web.Http.WebHost.resources.dll
-C:\Users\gonzalop\Source\Repos\Democracy\Democracy\bin\es\EntityFramework.resources.dll
-C:\Users\gonzalop\Source\Repos\Democracy\Democracy\bin\es\EntityFramework.SqlServer.resources.dll
 C:\Users\gonzalop\Source\Repos\Democracy\Democracy\bin\es\Microsoft.AspNet.Identity.Core.resources.dll
 C:\Users\gonzalop\Source\Repos\Democracy\Democracy\bin\es\Microsoft.AspNet.Identity.Owin.resources.dll
 C:\Users\gonzalop\Source\Repos\Democracy\Democracy\bin\es\Microsoft.AspNet.Identity.EntityFramework.resources.dll
@@ -78,9 +78,8 @@ C:\Users\gonzalop\Source\Repos\Democracy\Democracy\bin\es\Microsoft.Owin.Securit
 C:\Users\gonzalop\Source\Repos\Democracy\Democracy\bin\es\Microsoft.Owin.Security.Google.resources.dll
 C:\Users\gonzalop\Source\Repos\Democracy\Democracy\bin\es\Microsoft.Owin.Security.Twitter.resources.dll
 C:\Users\gonzalop\Source\Repos\Democracy\Democracy\bin\es\Microsoft.Owin.Security.MicrosoftAccount.resources.dll
+C:\Users\gonzalop\Source\Repos\Democracy\Democracy\obj\Debug\Democracy.Migrations.InitialCreate.resources
+C:\Users\gonzalop\Source\Repos\Democracy\Democracy\obj\Debug\Democracy.Migrations._20171004.resources
+C:\Users\gonzalop\Source\Repos\Democracy\Democracy\obj\Debug\Democracy.csproj.GenerateResource.Cache
 C:\Users\gonzalop\Source\Repos\Democracy\Democracy\obj\Debug\Democracy.dll
 C:\Users\gonzalop\Source\Repos\Democracy\Democracy\obj\Debug\Democracy.pdb
-C:\Users\gonzalop\Source\Repos\Democracy\Democracy\obj\Debug\Democracy.Migrations.InitialCreate.resources
-C:\Users\gonzalop\Source\Repos\Democracy\Democracy\obj\Debug\Democracy.csproj.GenerateResource.Cache
-C:\Users\gonzalop\Source\Repos\Democracy\Democracy\obj\Debug\Democracy.Migrations._20171004.resources
-C:\Users\gonzalop\Source\Repos\Democracy\Democracy\obj\Debug\Democracy.csprojResolveAssemblyReference.cache

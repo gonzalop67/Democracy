@@ -97,14 +97,14 @@ namespace Democracy.Controllers
                     ex.InnerException.InnerException != null && 
                     ex.InnerException.InnerException.Message.Contains("UserNameIndex"))
                 {
-                    ViewBag.Error = "The email has already used for another user";
+                    ModelState.AddModelError(string.Empty, "The email has already used for another user");
                 }
                 else
                 {
-                    ViewBag.Error = ex.Message;
+                    ModelState.AddModelError(string.Empty, ex.Message);
                 }
 
-                return RedirectToAction("Index");
+                return View(userView);
             }
             
             return RedirectToAction("Index");
@@ -239,7 +239,27 @@ namespace Democracy.Controllers
         {
             User user = db.Users.Find(id);
             db.Users.Remove(user);
-            db.SaveChanges();
+
+            try
+            {
+                db.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                if (ex.InnerException != null &&
+                    ex.InnerException.InnerException != null &&
+                    ex.InnerException.InnerException.Message.Contains("REFERENCE"))
+                {
+                    ModelState.AddModelError(string.Empty, "Can't delete the record, because has related records");
+                }
+                else
+                {
+                    ModelState.AddModelError(string.Empty, ex.Message);
+                }
+
+                return View(user);
+            }
+            
             return RedirectToAction("Index");
         }
 
