@@ -195,7 +195,7 @@ namespace Democracy.Controllers
                         ModelState.AddModelError(string.Empty, ex.Message);
                     }
 
-                    return RedirectToAction("Index");
+                    return View(userView);
                 }
             }
 

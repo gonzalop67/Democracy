@@ -205,6 +205,8 @@
     <Compile Include="Models\RegisterUserView.cs" />
     <Compile Include="Models\State.cs" />
     <Compile Include="Models\User.cs" />
+    <Compile Include="Models\UserIndexView.cs" />
+    <Compile Include="Models\UserSettingsView.cs" />
     <Compile Include="Models\UserView.cs" />
     <Compile Include="Models\Voting.cs" />
     <Compile Include="Models\VotingGroup.cs" />
@@ -215,6 +217,10 @@
   <ItemGroup>
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\Images\democracy.jpg" />
+    <Content Include="Content\Images\election-results.jpg" />
+    <Content Include="Content\Images\settings.jpg" />
+    <Content Include="Content\Images\voting.jpg" />
     <Content Include="Content\Photos\Angelina.jpg" />
     <Content Include="Content\Photos\debora-testa.jpg" />
     <Content Include="Content\Photos\elber-gomez-torba.jpg" />
@@ -303,6 +309,7 @@
     <Content Include="Views\Groups\AddMember.cshtml" />
     <Content Include="Views\Votings\AddGroup.cshtml" />
     <Content Include="Views\Votings\AddCandidate.cshtml" />
+    <Content Include="Views\Users\MySettings.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

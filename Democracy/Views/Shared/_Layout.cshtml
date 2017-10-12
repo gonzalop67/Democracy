@@ -18,17 +18,26 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                @Html.ActionLink("Nombre de aplicación", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+                @Html.ActionLink("Democracy", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
                     <li>@Html.ActionLink("Inicio", "Index", "Home")</li>
                     <li>@Html.ActionLink("Acerca de", "About", "Home")</li>
                     <li>@Html.ActionLink("Contacto", "Contact", "Home")</li>
-                    <li>@Html.ActionLink("States", "Index", "States")</li>
-                    <li>@Html.ActionLink("Groups", "Index", "Groups")</li>
-                    <li>@Html.ActionLink("Votings", "Index", "Votings")</li>
-                    <li>@Html.ActionLink("Users", "Index", "Users")</li>
+                    @if (this.User.IsInRole("Admin"))
+                    {
+                        <li>@Html.ActionLink("States", "Index", "States")</li>
+                        <li>@Html.ActionLink("Groups", "Index", "Groups")</li>
+                        <li>@Html.ActionLink("Votings", "Index", "Votings")</li>
+                        <li>@Html.ActionLink("Users", "Index", "Users")</li>
+                    }
+                    @if (this.User.IsInRole("User"))
+                    {
+                        <li>@Html.ActionLink("My Settings", "MySettings", "Users")</li>
+                        <li>@Html.ActionLink("My Votings", "MyVotings", "Votings")</li>
+                        <li>@Html.ActionLink("Results", "Results", "Votings")</li>
+                    }
                 </ul>
                 @Html.Partial("_LoginPartial")
             </div>
