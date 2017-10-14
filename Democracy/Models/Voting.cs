@@ -58,5 +58,7 @@ namespace Democracy.Models
         public virtual ICollection<VotingGroup> VotingGroups { get; set; }
 
         public virtual ICollection<Candidate> Candidates { get; set; }
+
+        public virtual ICollection<VotingDetail> VotingDetails { get; set; }
     }
 }

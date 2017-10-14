@@ -10,11 +10,117 @@ using Democracy.Models;
 
 namespace Democracy.Controllers
 {
-    [Authorize(Roles = "Admin")]
     public class VotingsController : Controller
     {
         private DemocracyContext db = new DemocracyContext();
 
+        [Authorize(Roles = "User")]
+        public ActionResult Vote(int votingId)
+        {
+            var voting = db.Votings.Find(votingId);
+            
+            var view = new VotingVoteView
+            {
+                DateTimeEnd = voting.DateTimeEnd,
+                DateTimeStart = voting.DateTimeStart,
+                Description = voting.Description,
+                IsEnabledBlankVotes = voting.IsEnabledBlankVotes,
+                IsForAllUsers = voting.IsForAllUsers,
+                MyCandidates = voting.Candidates.ToList(),
+                Remarks = voting.Remarks,
+                VotingId = voting.VotingId
+            };
+
+            return View(view);
+        }
+
+        [Authorize(Roles = "User")]
+        public ActionResult MyVotings()
+        {
+            var user = db.Users.Where(u => u.UserName == this.User.Identity.Name).FirstOrDefault();
+
+            if (user == null)
+            {
+                ModelState.AddModelError(string.Empty, "There an error with the current user, call the suport.");
+                return View();
+            }
+
+            // Get event votings for the correct time
+            var state = this.GetState("Open");
+
+            var votings = db.Votings.Where(v => v.StateId == state.StateId &&
+                                                v.DateTimeStart <= DateTime.Now &&
+                                                v.DateTimeEnd >= DateTime.Now)
+                                    .Include(v => v.Candidates)
+                                    .Include(v => v.VotingGroups)
+                                    .Include(v => v.State)
+                                    .ToList();
+
+            // Discard events in the wich the user already vote
+            for (int i = 0; i < votings.Count; i++)
+            {
+                int userId = user.UserId;
+                int votingId = votings[i].VotingId;
+
+                var votingDetail = db.VotingDetails.Where(vd => vd.VotingId == votingId && vd.UserId == userId).FirstOrDefault();
+
+                if (votingDetail != null)
+                {
+                    votings.RemoveAt(i);
+                }
+            }
+
+            // Discard events by groups in wich the user are not included
+            for (int i = 0; i < votings.Count; i++)
+            {
+                if (!votings[i].IsForAllUsers)
+                {
+                    bool userBelongsToGroup = false;
+
+                    foreach (var votingGroup in votings[i].VotingGroups)
+                    {
+                        var userGroup = votingGroup.Group.GroupMembers
+                            .Where(gm => gm.UserId == user.UserId)
+                            .FirstOrDefault();
+
+                        if (userGroup != null)
+                        {
+                            userBelongsToGroup = true;
+                            break;
+                        }
+
+                    }
+
+                    if (!userBelongsToGroup)
+                    {
+                        votings.RemoveAt(i);
+                    }
+                }
+            }
+
+
+            return View(votings);
+        }
+
+        private State GetState(string stateName)
+        {
+            var state = db.States.Where(s => s.Description == stateName).FirstOrDefault();
+
+            if (state == null)
+            {
+                state = new State
+                {
+                    Description = stateName,
+                };
+
+                db.States.Add(state);
+                db.SaveChanges();
+            }
+
+            return state;
+        }
+
+        [Authorize(Roles = "Admin")]
         public ActionResult DeleteGroup(int id)
         {
             var votingGroup = db.VotingGroups.Find(id);
@@ -27,6 +133,7 @@ namespace Democracy.Controllers
             return RedirectToAction(string.Format("Details/{0}", votingGroup.VotingId));
         }
 
+        [Authorize(Roles = "Admin")]
         public ActionResult DeleteCandidate(int id)
         {
             var candidate = db.Candidates.Find(id);
@@ -69,6 +176,7 @@ namespace Democracy.Controllers
             return View(view);
         }
 
+        [Authorize(Roles = "Admin")]
         public ActionResult AddCandidate(int id)
         {
             var view = new AddCandidateView
@@ -111,6 +219,7 @@ namespace Democracy.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admin")]
         public ActionResult AddGroup(int id)
         {
 
@@ -124,14 +233,14 @@ namespace Democracy.Controllers
             return View(view);
         }
 
-        // GET: Votings
+        [Authorize(Roles = "Admin")]
         public ActionResult Index()
         {
-            var votings = db.Votings.Include(v => v.StateId);
-            return View(db.Votings.ToList());
+            var votings = db.Votings.Include(v => v.State);
+            return View(votings.ToList());
         }
 
-        // GET: Votings/Details/5
+        [Authorize(Roles = "Admin")]
         public ActionResult Details(int? id)
         {
             if (id == null)
@@ -164,7 +273,7 @@ namespace Democracy.Controllers
             return View(view);
         }
 
-        // GET: Votings/Create
+        [Authorize(Roles = "Admin")]
         public ActionResult Create()
         {
             ViewBag.StateId = new SelectList(db.States, "StateId", "Description");
@@ -203,7 +312,7 @@ namespace Democracy.Controllers
             return View(view);
         }
 
-        // GET: Votings/Edit/5
+        [Authorize(Roles = "Admin")]
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -232,11 +341,10 @@ namespace Democracy.Controllers
                 VotingId = voting.VotingId
             };
 
-            ViewBag.StateId = new SelectList(db.States, "StateId", "Description");
+            ViewBag.StateId = new SelectList(db.States, "StateId", "Description", voting.StateId);
             return View(view);
         }
 
-        // POST: Votings/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit(VotingView view)
@@ -261,7 +369,7 @@ namespace Democracy.Controllers
             return View(view);
         }
 
-        // GET: Votings/Delete/5
+        [Authorize(Roles = "Admin")]
         public ActionResult Delete(int? id)
         {
             if (id == null)
@@ -278,7 +386,6 @@ namespace Democracy.Controllers
             return View(voting);
         }
 
-        // POST: Votings/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)

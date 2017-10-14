@@ -6,21 +6,24 @@ using System.Web;
 
 namespace Democracy.Models
 {
-    public class Candidate
+    public class VotingDetail
     {
         [Key]
-        public int CandidateId { get; set; }
+        public int VotingDetailId { get; set; }
+
+        public DateTime DateTime { get; set; }
 
         public int VotingId { get; set; }
 
         public int UserId { get; set; }
 
-        public int QuantityVotes { get; set; }
+        public int CandidateId { get; set; }
 
         public virtual Voting Voting { get; set; }
 
         public virtual User User { get; set; }
 
-        public virtual ICollection<VotingDetail> VotingDetails { get; set; }
+        public virtual Candidate Candidate { get; set; }
+
     }
 }
