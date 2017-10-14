@@ -14,7 +14,74 @@ namespace Democracy.Controllers
     {
         private DemocracyContext db = new DemocracyContext();
 
-        [Authorize(Roles = "User")]
+        [Authorize(Roles = "User,Admin")]
+        public ActionResult VoteForCandidate(int candidateId, int votingId)
+        {
+            var user = db.Users.Where(u => u.UserName == this.User.Identity.Name).FirstOrDefault();
+            
+            if (user == null)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
+            var candidate = db.Candidates.Find(candidateId);
+
+            if (candidate == null)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
+            var voting = db.Votings.Find(votingId);
+
+            if (voting == null)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
+            if (this.VoteCandidate(user, candidate, voting))
+            {
+                return RedirectToAction("MyVotings");
+            }
+
+            return RedirectToAction("Index", "Home");
+        }
+
+        private bool VoteCandidate(Models.User user, Candidate candidate, Voting voting)
+        {
+            using (var transaction = db.Database.BeginTransaction())
+            {
+                var votingDetail = new VotingDetail
+                {
+                    CandidateId = candidate.CandidateId,
+                    DateTime = DateTime.Now,
+                    UserId = user.UserId,
+                    VotingId = voting.VotingId
+                };
+
+                db.VotingDetails.Add(votingDetail);
+
+                candidate.QuantityVotes++;
+                db.Entry(candidate).State = EntityState.Modified;
+
+                voting.QuantityVotes++;
+                db.Entry(voting).State = EntityState.Modified;
+
+                try
+                {
+                    db.SaveChanges();
+                    transaction.Commit();
+                    return true;
+                }
+                catch (Exception)
+                {
+                    transaction.Rollback();
+                }
+
+                return false;
+            }
+        }
+
+        [Authorize(Roles = "User,Admin")]
         public ActionResult Vote(int votingId)
         {
             var voting = db.Votings.Find(votingId);
@@ -34,7 +101,7 @@ namespace Democracy.Controllers
             return View(view);
         }
 
-        [Authorize(Roles = "User")]
+        [Authorize(Roles = "User,Admin")]
         public ActionResult MyVotings()
         {
             var user = db.Users.Where(u => u.UserName == this.User.Identity.Name).FirstOrDefault();
@@ -57,27 +124,24 @@ namespace Democracy.Controllers
                                     .ToList();
 
             // Discard events in the wich the user already vote
-            for (int i = 0; i < votings.Count; i++)
+            foreach (var voting in votings.ToList())
             {
-                int userId = user.UserId;
-                int votingId = votings[i].VotingId;
-
-                var votingDetail = db.VotingDetails.Where(vd => vd.VotingId == votingId && vd.UserId == userId).FirstOrDefault();
+                var votingDetail = db.VotingDetails.Where(vd => vd.VotingId == voting.VotingId && vd.UserId == user.UserId).FirstOrDefault();
 
                 if (votingDetail != null)
                 {
-                    votings.RemoveAt(i);
+                    votings.Remove(voting);
                 }
             }
 
             // Discard events by groups in wich the user are not included
-            for (int i = 0; i < votings.Count; i++)
+            foreach (var voting in votings.ToList())
             {
-                if (!votings[i].IsForAllUsers)
+                if (!voting.IsForAllUsers)
                 {
                     bool userBelongsToGroup = false;
 
-                    foreach (var votingGroup in votings[i].VotingGroups)
+                    foreach (var votingGroup in voting.VotingGroups)
                     {
                         var userGroup = votingGroup.Group.GroupMembers
                             .Where(gm => gm.UserId == user.UserId)
@@ -93,7 +157,7 @@ namespace Democracy.Controllers
 
                     if (!userBelongsToGroup)
                     {
-                        votings.RemoveAt(i);
+                        votings.Remove(voting);
                     }
                 }
             }

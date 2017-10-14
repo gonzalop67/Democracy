@@ -179,7 +179,7 @@ namespace Democracy.Controllers
                 {
                     db.SaveChanges();
                     var userASP = this.CreateASPUser(userView);
-                    await SignInManager.SignInAsync(userASP, isPersistent: false, rememberBrowser: false);
+                    await SignInManager.SignInAsync(userASP, isPersistent: false, rememberBrowser: true);
                     return RedirectToAction("Index", "Home");
                 }
                 catch (Exception ex)
