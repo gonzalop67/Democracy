@@ -1,18 +1,67 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using CrystalDecisions.CrystalReports.Engine;
+using Democracy.Models;
+using System;
+using System.Configuration;
 using System.Data;
 using System.Data.Entity;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Net;
-using System.Web;
 using System.Web.Mvc;
-using Democracy.Models;
 
 namespace Democracy.Controllers
 {
     public class VotingsController : Controller
     {
         private DemocracyContext db = new DemocracyContext();
+
+        [Authorize(Roles = "User,Admin")]
+        public ActionResult ShowResults(int id)
+        {
+            var report = GenerateResultReport(id);
+            var stream = report.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
+            return File(stream, "application/pdf");
+        }
+
+        private ReportClass GenerateResultReport(int id)
+        {
+            var connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
+            var connection = new SqlConnection(connectionString);
+            var dataTable = new DataTable();
+            var sql = @"SELECT Votings.VotingId, Votings.Description AS Voting, States.Description AS State, 
+                               Users.FirstName + ' ' + Users.LastName AS Candidate, 
+                               Candidates.QuantityVotes
+                          FROM Votings INNER JOIN
+                               States ON Votings.StateId = States.StateId INNER JOIN
+                               Candidates ON Votings.VotingId = Candidates.VotingId INNER JOIN
+                               Users ON Candidates.UserId = Users.UserId
+                         WHERE Votings.VotingId = " + id;
+
+            try
+            {
+                connection.Open();
+                var command = new SqlCommand(sql, connection);
+                var adapter = new SqlDataAdapter(command);
+                adapter.Fill(dataTable);
+            }
+            catch (Exception ex)
+            {
+                ex.ToString();
+            }
+
+            var report = new ReportClass();
+            report.FileName = Server.MapPath("/Reports/Results.rpt");
+            report.Load();
+            report.SetDataSource(dataTable);
+            return report;
+        }
+
+        [Authorize(Roles = "User,Admin")]
+        public ActionResult Results()
+        {
+            var votings = db.Votings.Include(v => v.State);
+            return View(votings.ToList());
+        }
 
         [Authorize(Roles = "User,Admin")]
         public ActionResult VoteForCandidate(int candidateId, int votingId)
